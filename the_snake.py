@@ -46,11 +46,11 @@ clock = pg.time.Clock()
 class GameObject:
     """Создание базового класса для игровых объектов."""
 
-    def __init__(self, body_color=None):
+    def __init__(self, body_color=None, border_color=BORDER_COLOR):
         """Инициализация атрибутов базового класса."""
         self.position = SCREEN_CENTER
         self.body_color = body_color
-        self.border_color = BORDER_COLOR
+        self.border_color = border_color
 
     def draw(self):
         """Метод для отрисовки игровых объектов."""
@@ -71,22 +71,22 @@ class Apple(GameObject):
     базового класса GameObject.
     """
 
-    def __init__(self, body_color=APPLE_COLOR, occupied_positions=None):
+    def __init__(
+        self,
+        body_color=APPLE_COLOR,
+        occupied_positions=(SCREEN_CENTER,)
+    ):
         """Инициализирует начальные параметры яблока."""
         super().__init__(body_color)
         self.randomize_position(occupied_positions)
 
-    def randomize_position(self, occupied_positions=None):
+    def randomize_position(self, occupied_positions):
         """Устанавливает случайную позицию яблока."""
         while True:
             x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            position = (x, y)
-            if (
-                occupied_positions is None
-                or position not in occupied_positions
-            ):
-                self.position = position
+            self.position = (x, y)
+            if (self.position not in occupied_positions):
                 break
 
     def draw(self):
@@ -136,9 +136,8 @@ class Snake(GameObject):
         if self.last:
             last_rect = pg.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pg.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
-        for position in self.positions[1:]:
+        for position in self.positions:
             self.draw_cell(position)
-        self.draw_cell(self.get_head_position())
 
     def reset(self):
         """Сбрасывает змейку в начальное состояние."""
