@@ -74,10 +74,11 @@ class Apple(GameObject):
     def __init__(
         self,
         body_color=APPLE_COLOR,
+        border_color=BORDER_COLOR,
         occupied_positions=(SCREEN_CENTER,)
     ):
         """Инициализирует начальные параметры яблока."""
-        super().__init__(body_color)
+        super().__init__(body_color, border_color)
         self.randomize_position(occupied_positions)
 
     def randomize_position(self, occupied_positions):
@@ -86,7 +87,7 @@ class Apple(GameObject):
             x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
             self.position = (x, y)
-            if (self.position not in occupied_positions):
+            if self.position not in occupied_positions:
                 break
 
     def draw(self):
@@ -100,9 +101,9 @@ class Snake(GameObject):
     базового класса GameObject.
     """
 
-    def __init__(self, body_color=SNAKE_COLOR):
+    def __init__(self, body_color=SNAKE_COLOR, border_color=BORDER_COLOR):
         """Инициализирует начальные параметры змейки."""
-        super().__init__(body_color)
+        super().__init__(body_color, border_color)
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
